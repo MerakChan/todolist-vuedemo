@@ -147,30 +147,30 @@ const handlePageChange = (newPage) => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-500">
-    <div class="max-w-6xl mx-auto px-6 py-12">
+  <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 transition-all duration-500">
+    <div class="max-w-4xl mx-auto px-6 py-12">
       <!-- Header -->
       <div class="flex justify-between items-center mb-12">
-        <h1 class="text-4xl font-bold text-gray-900 dark:text-white tracking-tight">Merak List</h1>
-        <button @click="toggleDark()" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-300">
-          <span class="mdi mdi-theme-light-dark text-2xl text-gray-600 dark:text-gray-400"></span>
+        <h1 class="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 tracking-tight transform hover:scale-105 transition-all duration-300">Merak List</h1>
+        <button @click="toggleDark()" class="p-3 rounded-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300">
+          <span class="text-2xl">{{ isDark ? '🌙' : '☀️' }}</span>
         </button>
       </div>
 
       <!-- Error Message -->
-      <div v-if="error" class="mb-6 p-4 bg-red-50 text-red-600 rounded-xl animate-fade-in text-sm">
+      <div v-if="error" class="mb-6 p-4 bg-red-100/80 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-xl shadow-sm backdrop-blur-sm animate-fade-in text-sm">
         {{ error }}
       </div>
 
       <!-- Progress Bar -->
-      <div class="mb-12">
+      <div class="mb-12 transform hover:scale-[1.02] transition-all duration-300">
         <div class="flex justify-between items-center mb-3">
           <span class="text-sm font-medium text-gray-600 dark:text-gray-400">完成进度</span>
-          <span class="text-sm font-medium text-gray-900 dark:text-white">{{ completionRate }}%</span>
+          <span class="text-sm font-semibold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400">{{ completionRate }}%</span>
         </div>
-        <div class="h-1.5 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+        <div class="h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden shadow-inner">
           <div 
-            class="h-1.5 bg-blue-500 rounded-full transition-all duration-500 ease-out"
+            class="h-2 bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-500 dark:to-purple-500 rounded-full transition-all duration-500 ease-out"
             :style="{ width: `${completionRate}%` }"
           ></div>
         </div>
@@ -178,41 +178,78 @@ const handlePageChange = (newPage) => {
 
       <!-- Add Todo Form -->
       <form @submit.prevent="addTodo" class="mb-12">
-        <div class="flex gap-3">
+        <div class="flex gap-3 transform hover:scale-[1.01] transition-all duration-300">
           <input
             v-model="newTodo"
             type="text"
             placeholder="添加新的待办事项..."
-            class="w-full px-4 py-3 text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-800 rounded-xl border-0 focus:ring-2 focus:ring-blue-500 transition-all duration-300 placeholder-gray-400 dark:placeholder-gray-500"
+            class="w-full px-4 py-3 text-gray-900 dark:text-white bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md focus:shadow-lg focus:ring-2 focus:ring-indigo-500 dark:focus:ring-purple-500 transition-all duration-300 placeholder-gray-400 dark:placeholder-gray-500"
           >
           <button 
             type="submit" 
-            class="px-4 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl transition-colors duration-300 flex items-center justify-center min-w-[48px]"
+            class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center min-w-[48px] transform hover:scale-105 active:scale-95"
           >
-            <span class="mdi mdi-plus text-xl"></span>
+            <span class="text-xl">➕</span>
           </button>
         </div>
       </form>
 
       <!-- Todo List -->
       <ul v-if="!loading && filteredTodos.length > 0" class="space-y-4">
-        <TransitionGroup name="list">
+        <TransitionGroup 
+          name="list"
+          class="transition-all duration-300"
+        >
           <li
             v-for="todo in filteredTodos"
             :key="todo.id"
-            class="group flex items-center gap-4 p-5 bg-gray-50 dark:bg-gray-800 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-750 transition-all duration-300"
+            class="group flex items-center gap-4 p-5 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md border border-gray-100 dark:border-gray-700 hover:border-indigo-200 dark:hover:border-purple-700 transform hover:scale-[1.02] transition-all duration-300"
           >
             <button 
               @click="toggleTodo(todo)"
-              class="flex-shrink-0 focus:outline-none"
+              class="flex-shrink-0 focus:outline-none transform hover:scale-110 transition-all duration-200"
             >
               <span 
-                :class="['mdi text-2xl transition-colors duration-300', todo.isCompleted ? 'mdi-checkbox-marked-circle text-blue-500' : 'mdi-checkbox-blank-circle-outline text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-300']"
-              ></span>
+                :class="['text-2xl transition-all duration-300', 
+                  todo.isCompleted ? 
+                  'text-indigo-600 dark:text-purple-400' : 
+                  'text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-300']"
+              >
+                {{ todo.isCompleted ? '✅' : '⭕' }}
+              </span>
             </button>
             <span 
               :class="['flex-1 text-lg transition-all duration-300', 
-                todo.isCompleted ? 
+                todo.isCompleted ? 'line-through text-gray-400 dark:text-gray-500' : 'text-gray-800 dark:text-gray-200']"
+            >
+              {{ todo.value }}
+            </span>
+            <button 
+              @click="handleDeleteClick(todo)"
+              class="opacity-0 group-hover:opacity-100 p-2 text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/30 transform hover:scale-110 transition-all duration-200"
+            >
+              🗑️
+            </button>
+          </li>
+        </TransitionGroup>
+      </ul>
+
+      <!-- Empty State -->
+      <div 
+        v-else-if="!loading" 
+        class="text-center py-12 text-gray-500 dark:text-gray-400 animate-fade-in"
+      >
+        <span class="text-4xl mb-4 block">📝</span>
+        <p class="text-lg">还没有待办事项，开始添加吧！</p>
+      </div>
+
+      <!-- Loading State -->
+      <div 
+        v-if="loading" 
+        class="flex justify-center items-center py-12"
+      >
+        <div class="animate-spin rounded-full h-12 w-12 border-4 border-indigo-500 border-t-transparent"></div>
+      </div>
                 'text-gray-300 dark:text-gray-600 blur-[0.3px] opacity-75' : 
                 'text-gray-900 dark:text-white']"
               >{{ todo.value }}</span>
@@ -251,28 +288,55 @@ const handlePageChange = (newPage) => {
         <button 
           @click="handlePageChange(currentPage - 1)"
           :disabled="currentPage === 0"
-          class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300 focus:outline-none"
+          class="px-4 py-2 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-300"
         >
-          <span class="mdi mdi-chevron-left text-xl text-gray-600 dark:text-gray-400"></span>
+          ⬅️ 上一页
         </button>
-        <span class="py-2 px-4 text-sm font-medium text-gray-600 dark:text-gray-400">
+        <span class="py-2 px-4 text-sm font-medium bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400">
           第 {{ currentPage + 1 }} 页，共 {{ Math.ceil(total / pageSize) }} 页
         </span>
         <button 
           @click="handlePageChange(currentPage + 1)"
           :disabled="currentPage >= Math.ceil(total / pageSize) - 1"
-          class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300 focus:outline-none"
+          class="px-4 py-2 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-300"
         >
-          <span class="mdi mdi-chevron-right text-xl text-gray-600 dark:text-gray-400"></span>
+          下一页 ➡️
         </button>
       </div>
     </div>
+
+    <style>
+    .list-enter-active,
+    .list-leave-active {
+      transition: all 0.5s ease;
+    }
+    .list-enter-from,
+    .list-leave-to {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    
+    .list-move {
+      transition: transform 0.5s ease;
+    }
+    
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .animate-fade-in {
+      animation: fade-in 0.5s ease-out forwards;
+    }
+    </style>
 
     <!-- Delete Confirmation Dialog -->
     <ConfirmDialog
       :show="showDeleteConfirm"
       title="确认删除"
       :message="`确定要删除待办事项「${todoToDelete?.value}」吗？`"
+      confirmButtonClass="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-4 py-2 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+      cancelButtonClass="bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 px-4 py-2 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 transform hover:scale-105"
       @confirm="handleConfirmDelete"
       @cancel="handleCancelDelete"
     />
